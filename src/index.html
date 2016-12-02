@@ -1,0 +1,37 @@
+<!doctype html>
+<html>
+  <head>
+    <%= t.include("partials/_head.html") %>
+    <link rel="stylesheet" type="text/css" href="style.css">
+  </head>
+  <body>
+
+    <responsive-child>
+      <main class="interactive">
+        <h1>Money for nothin'?</h1>
+
+        <p class="chatter">
+          Even though it legalized recreational weed in 2012, Washington still recieves federal funding from the DEA to eradicate marijuana plants &mdash; almost a billion dollars in 2015. Use the map below to examine funding nationwide for eradication. States where marijuana was legalized for recreational use in 2014 or earlier are outlined in bold.
+        </p>
+        <div class="controls">
+          <a class="filter-view" data-view="dea">DEA expenditure</a> |
+          <a class="filter-view" data-view="dea-delta">Funding change, 2014-2015</a> |
+          <a class="filter-view" data-view="eradicated">Plants eradicated</a> |
+          <a class="filter-view" data-view="cpp">Cost per plant</a>
+        </div>
+        <savage-image src="assets/hex-map.svg"></savage-image>
+        <div class="key"></div>
+        <div class="detail-panel"></div>
+      </main>
+    </responsive-child>
+
+    <script>
+window.marijuanaData = <%= JSON.stringify(csv.eradication) %>;
+    </script>
+    <script src="app.js" async></script>
+    <% if (json.project.production) { %>
+    <%= !json.project.embedded ? t.include("partials/_foot.html") : "" %>
+    <%= t.include("partials/_workHere.html") %>
+    <% } %>
+  </body>
+</html>

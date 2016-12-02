@@ -1,0 +1,110 @@
+@import "seattletimes";
+
+main.interactive {
+  max-width: 630px;
+  font-size: 16px;
+}
+
+.controls {
+  text-align: center;
+
+  a.filter-view {
+    color: @df-middle-gray;
+    cursor: pointer;
+
+    &.active {
+      color: @df-dark-gray;
+      font-weight: bold;
+    }
+  }
+}
+
+savage-image {
+  g[id] {
+    cursor: pointer;
+
+    polygon {
+      stroke: @df-light-gray;
+      stroke-width: 1px;
+      // stroke-dashArray: 2 1;
+    }
+  }
+
+  g#DC { display: none }
+
+  g.did-not-participate {
+    text {
+      fill: @df-middle-gray;
+    }
+
+    polygon {
+      fill: url(#checks);
+    }
+  }
+}
+
+.key {
+  padding: 10px 0;
+
+  .scale {
+    .display-flex();
+    width: 100%;
+
+    .zone:not(.zero-point) {
+      .flex(1 0 0%);
+
+      &.right {
+        text-align: right;
+      }
+    }
+
+    .gradient {
+      height: 10px;
+
+      &.below-zero {
+        background: linear-gradient(to right, @st-dark-purple, white);
+      }
+
+      &.above-zero {
+        background: linear-gradient(to right, white, @st-dark-orange);
+      }
+    }
+
+  }
+}
+
+.detail-panel {
+  h1 {
+    margin: 0;
+    font-size: 20px;
+    text-align: center;
+  }
+
+  table {
+    margin: 16px auto;
+    border-collapse: collapse;
+
+    th, td {
+      text-align: right;
+      padding: 4px 8px;
+
+      &:not(:last-child) {
+        border-right: 1px solid @df-light-gray;
+      }
+    }
+
+    th {
+      font-weight: normal;
+    }
+
+    td {
+
+    }
+
+    thead th {
+      border-bottom: 1px solid @df-middle-gray;
+      background: @df-off-black;
+      color: @df-off-white;
+    }
+  }
+}
