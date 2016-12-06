@@ -1,8 +1,8 @@
 <% var commafy = function(n) { return n.toLocaleString().replace(/\.0+/g, "") }; %>
-<h1><%= data.state %> (pop. <%= commafy(data.population) %>)</h1>
-<% if (!data.dea_2014 && !data.dea_2015) { %>
+<h1><%= data.state %></h1>
+<% if (!data.dea_2014 && !data.dea_2016) { %>
   <p>
-    This state did not participate in the DEA funding program during 2014 or 2015.
+    This state did not participate in the DEA funding program during 2014 or 2016.
 <% } else { %>
 <table>
   <thead>
@@ -10,23 +10,24 @@
       <th></th>
       <th>2014
       <th>2015
-      <th>% change
+      <th>2016
   </thead>
   <tbody>
     <tr>
       <th>DEA funding
       <td>$<%= commafy(data.dea_2014) %>
       <td>$<%= commafy(data.dea_2015) %>
-      <td><%= (data.dea_delta / data.dea_2014 * 100).toFixed(1) %>%
+      <td>$<%= commafy(data.dea_2016) %><br>
+        <span class="delta"><%= data.dea_delta.toFixed(1) %>%</span>
     <tr>
       <th>Plants eradicated
       <td><%= commafy(data.eradicated_2014) %>
       <td><%= commafy(data.eradicated_2015) %>
-      <td><%= (data.eradicated_delta / data.eradicated_2014 * 100).toFixed(1) %>%
+      <td> -
     <tr>
       <th>Cost per plant
       <td>$<%= data.cpp_2014.toFixed(2) %>
       <td>$<%= data.cpp_2015.toFixed(2) %>
-      <td><%= (data.cpp_delta / data.cpp_2014 * 100).toFixed(1) %>%
+      <td> -
 </table>
 <% } %>

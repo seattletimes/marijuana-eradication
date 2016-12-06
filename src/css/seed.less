@@ -41,14 +41,41 @@ savage-image {
       fill: url(#checks);
     }
   }
+
+  g.active-hex {
+    text {
+      font-weight: bold;
+    }
+  }
 }
 
 .key {
   padding: 10px 0;
+  margin: auto;
+  max-width: 320px;
 
   .scale {
     .display-flex();
     width: 100%;
+    position: relative;
+
+    &::before, &::after {
+      display: block;
+      content: "";
+      border-left: 1px solid @df-light-gray;
+      top: 0px;
+      height: 20px;
+      position: absolute;
+    }
+
+    &::before {
+      left: 0px;
+    }
+
+    &::after {
+      right: 0px;
+      border-left-color: darken(@st-dark-orange, 30%);
+    }
 
     .zone:not(.zero-point) {
       .flex(1 0 0%);
@@ -60,6 +87,7 @@ savage-image {
 
     .gradient {
       height: 10px;
+      margin-bottom: 4px;
 
       &.below-zero {
         background: linear-gradient(to right, @st-dark-purple, white);
@@ -83,10 +111,12 @@ savage-image {
   table {
     margin: 16px auto;
     border-collapse: collapse;
+    min-width: 320px;
 
     th, td {
       text-align: right;
       padding: 4px 8px;
+      vertical-align: top;
 
       &:not(:last-child) {
         border-right: 1px solid @df-light-gray;
@@ -98,7 +128,10 @@ savage-image {
     }
 
     td {
-
+      .delta {
+        font-weight: bold;
+        font-size: 14px;
+      }
     }
 
     thead th {

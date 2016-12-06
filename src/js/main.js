@@ -8,6 +8,7 @@ require("savage-image");
 var $ = require("./lib/qsa");
 var colors = require("./lib/colors");
 var dot = require("./lib/dot");
+var savage = require("savage-query");
 
 var image = document.querySelector("savage-image");
 
@@ -23,20 +24,22 @@ var lerp = function(a, b, d) {
 var views = {
   "cpp": {
     property: "cpp_2015",
-    percap: false
+    prefix: "$"
   },
   "dea": {
-    property: "dea_2015",
-    percap: false
+    property: "dea_2016",
+    max: 1000000,
+    maxText: "1,000,000+",
+    prefix: "$"
   },
   "dea-delta": {
     property: "dea_delta",
-    percap: false,
-    zero: true
+    change: true
   },
   "eradicated": {
     property: "eradicated_2015",
-    percap: false
+    max: 1000000,
+    maxText: "1,000,000+"
   }
 }
 
@@ -44,14 +47,12 @@ image.addEventListener("load", function() {
 
   for (var s in mj) {
     var state = mj[s];
-    if (!state.dea_2015 && !state.dea_2014) {
+    if (!state.dea_2016 && !state.dea_2014) {
         var group = document.querySelector(`g#${s}`);
         group.setAttribute("class", group.getAttribute("class") + " did-not-participate");
         state.exclude = true;
     } else {
-      ["cpp", "dea", "eradicated"].forEach(function(k) {
-        state[`${k}_delta`] = state[`${k}_2015`] - state[`${k}_2014`];
-      });
+      state.dea_delta = (state.dea_2016 - state.dea_2014) / state.dea_2014 * 100;
     }
   }
 
@@ -80,18 +81,23 @@ image.addEventListener("load", function() {
       if (config.percap) return v / mj[s].population;
       return v;
     });
-    var max = Math.max(...values);
-    var min = Math.min(...values);
-    var range = max - min;
+    var max, min;
+    if (config.change) {
+      max = 100;
+      min = -100;
+    } else {
+      max = config.max || Math.max(...values);
+      min = Math.min(...values);
+    }
 
     var commafy = function(n) { return n.toLocaleString().replace(/\.0+/g, "") };
     var key = document.querySelector(".key");
-    if (config.zero) {
+    if (config.change) {
       key.innerHTML = `
 <div class="scale">
   <div class="left zone">
     <div class="below-zero gradient"></div>
-    $${commafy(min)}
+    ${commafy(min)}%
   </div>
   <div class="zero-point zone">
     <div class="gradient"></div>
@@ -99,7 +105,7 @@ image.addEventListener("load", function() {
   </div>
   <div class="right zone">
     <div class="above-zero gradient"></div>
-    $${commafy(max)}
+    ${commafy(max)}%
   </div>
 </div>
       `;
@@ -108,11 +114,11 @@ image.addEventListener("load", function() {
 <div class="scale">
   <div class="zero-point zone">
     <div class="gradient"></div>
-    0
+    ${config.prefix || ""}0
   </div>
   <div class="right zone">
     <div class="above-zero gradient"></div>
-    ${commafy(max)}
+    ${config.prefix || ""}${config.maxText || commafy(max)}
   </div>
 </div>
       `
@@ -124,7 +130,7 @@ image.addEventListener("load", function() {
       var label = document.querySelector(`g#${p} text`);
       var scaled;
       var color;
-      if (config.zero) {
+      if (config.change) {
         label.style.fill = "black";
         if (value > 0) {
           scaled = value / max;
@@ -134,7 +140,9 @@ image.addEventListener("load", function() {
           color = lerp(middle, low, scaled);
         }
       } else {
+        var range = max - min;
         scaled = (value - min) / range;
+        if (scaled > 1) scaled = 1;
         color = lerp(low, high, scaled);
       }
       polygon.style.fill = color instanceof Array ? colors.rgb.apply(null, color) : color;
@@ -145,7 +153,7 @@ image.addEventListener("load", function() {
     var key = document.querySelector(".key");
     var v = this.getAttribute("data-view");
     var config = views[v];
-    if (config.zero) {
+    if (config.change) {
       paint(config, LOW_COLOR, HIGH_COLOR, CENTER);
     } else {
       paint(config, CENTER, HIGH_COLOR);
@@ -164,6 +172,9 @@ image.addEventListener("load", function() {
   var showDetail = function(e) {
     if (e.type == "mousemove" && clicked) return;
     if (e.type == "click") clicked = true;
+    var previous = document.querySelector(".active-hex");
+    if (previous) savage(previous).removeClass("active-hex");
+    savage(this).addClass("active-hex");
     var state = this.getAttribute("id");
     var panel = document.querySelector(".detail-panel");
     var data = mj[state];
