@@ -41,7 +41,7 @@ var views = {
     max: 1000000,
     maxText: "1,000,000+"
   }
-}
+};
 
 image.addEventListener("load", function() {
 
@@ -72,7 +72,7 @@ image.addEventListener("load", function() {
     poly.style.stroke = "black";
     poly.style.strokeWidth = 2;
     group.parentNode.appendChild(group);
-  })
+  });
 
   var paint = function(config, low, high, middle) {
     var postals = Object.keys(mj).filter(p => !mj[p].exclude);
@@ -121,7 +121,7 @@ image.addEventListener("load", function() {
     ${config.prefix || ""}${config.maxText || commafy(max)}
   </div>
 </div>
-      `
+      `;
     }
 
     postals.forEach(function(p, i) {
