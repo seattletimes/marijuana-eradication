@@ -14,8 +14,8 @@ var image = document.querySelector("savage-image");
 
 var mj = window.marijuanaData;
 const CENTER = [255, 255, 255];
-const LOW_COLOR = [123, 90, 166];
-const HIGH_COLOR = [248, 158, 93];
+const LOW_COLOR = colors.components.stDarkPurple;
+const HIGH_COLOR = colors.components.stDarkOrange;
 
 var lerp = function(a, b, d) {
   return a.map((v, i) => v * (1 - d) + b[i] * d);
